@@ -26,7 +26,7 @@ const userShema = new mongoose.Schema({
   //     },
 
   userId: {
-    type: String,
+    type:  Number,
     unique: true,
   },
   balance: {

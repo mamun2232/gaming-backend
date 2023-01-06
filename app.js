@@ -18,8 +18,10 @@ app.use(express.static("public"));
 // import all router 
 const userRouter = require('./router/user')
 const gameRouter = require('./router/gameRouter')
+const resultRouter = require("./router/resultRouter")
 app.use("/api/v1/user" , userRouter)
 app.use("/api/v1/game" , gameRouter)
+app.use("/api/v1/result" , resultRouter)
 
 
 // test route

@@ -1,5 +1,5 @@
 const Game = require("../model/gameModel");
-const User = require('../model/userModel')
+const User = require("../model/userModel");
 
 exports.playGame = async (req, res, next) => {
   const { money, userId, gameName, PeroidNo } = req.body;
@@ -24,3 +24,12 @@ exports.playGame = async (req, res, next) => {
     message: "game start successfull, please wait drow",
   });
 };
+
+// exports.getDataFiveMinuteAgo = async (req, res, next) => {
+//  let fiveMinute = new Date()
+//  fiveMinute.setMinutes(fiveMinute.getMinutes() - 5)
+//  console.log(fiveMinute);
+
+//   const data = await Game.find({date: fiveMinute})
+//   res.send(data)
+// };

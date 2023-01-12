@@ -2,7 +2,7 @@ const Game = require("../model/gameModel");
 const User = require("../model/userModel");
 
 exports.playGame = async (req, res, next) => {
-  const { money, userId, gameName, PeroidNo } = req.body;
+  const { money, userId, gameName, PeroidNo, userIdNumber } = req.body;
 
   const userExist = await User.findById(userId);
   if (!userExist)
@@ -18,18 +18,104 @@ exports.playGame = async (req, res, next) => {
       useFindAndModify: false,
     }
   );
-  await Game.create({ money, userId, gameName, PeroidNo: parseInt(PeroidNo) });
-  res.send({
-    success: true,
-    message: "game start successfull, please wait drow",
+
+  const exsitGame = await Game.findOne({
+    $and: [{ userId: userId }, { PeroidNo: parseInt(PeroidNo) }, { gameName }],
   });
+  console.log(exsitGame);
+  if (exsitGame) {
+    console.log(exsitGame);
+    exsitGame.money = parseInt(exsitGame.money) + parseInt(money);
+    await exsitGame.save();
+    res.send({
+      success: true,
+      message: "game start successfull, please wait drow",
+    });
+  } else {
+    await Game.create({
+      money: parseInt(money),
+      userId,
+      gameName,
+      PeroidNo: parseInt(PeroidNo),
+      userIdNumber
+    });
+    res.send({
+      success: true,
+      message: "game start successfull, please wait drow",
+    });
+  }
+  console.log(exsitGame);
 };
 
-// exports.getDataFiveMinuteAgo = async (req, res, next) => {
-//  let fiveMinute = new Date()
-//  fiveMinute.setMinutes(fiveMinute.getMinutes() - 5)
-//  console.log(fiveMinute);
+exports.findAllGame = async (req, res, next) => {
+  const { peroid } = req.params;
 
-//   const data = await Game.find({date: fiveMinute})
-//   res.send(data)
-// };
+  const gameResult = await Game.find({ PeroidNo: peroid });
+
+  if (gameResult.length == 0)
+    return res.send({ success: false, message: "game not found" });
+
+  const facebook = gameResult.filter((game) => game.gameName == "facebook");
+  const tiktok = gameResult.filter((game) => game.gameName == "Tiktok");
+
+  res.send({ success: true, facebook, tiktok });
+};
+
+exports.winGameFacebook = async (req, res, next) => {
+  const result = req.body;
+  const users = await User.find({});
+
+  // calculate user balance
+  const combinedArray = users.reduce((acc, cur) => {
+    const user = result.find((item) => item.id == cur._id);
+    console.log(user);
+    if (user) {
+      acc.push({
+        id: user.id,
+        name: cur.name,
+        balance: cur.balance + user.money,
+      });
+    }
+    return acc;
+  }, []);
+
+  // update user balance
+  combinedArray.forEach(async (item) => {
+    console.log(item);
+    const user = await User.findOne({ _id: item.id });
+    console.log(user);
+    user.balance = parseInt(item.balance);
+    await user.save();
+  });
+
+  res.send({ success: true, message: "Game win Successfull" });
+};
+exports.winGameTiktok = async (req, res, next) => {
+  const result = req.body;
+  const users = await User.find({});
+
+  // calculate user balance
+  const combinedArray = users.reduce((acc, cur) => {
+    const user = result.find((item) => item.id == cur._id);
+    console.log(user);
+    if (user) {
+      acc.push({
+        id: user.id,
+        name: cur.name,
+        balance: cur.balance + user.money,
+      });
+    }
+    return acc;
+  }, []);
+
+  // update user balance
+  combinedArray.forEach(async (item) => {
+    console.log(item);
+    const user = await User.findOne({ _id: item.id });
+    console.log(user);
+    user.balance = parseInt(item.balance);
+    await user.save();
+  });
+
+  res.send({ success: true, message: "Game win Successfull" });
+};

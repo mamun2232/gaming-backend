@@ -30,8 +30,8 @@ const userShema = new mongoose.Schema({
     unique: true,
   },
   balance: {
-    type: String,
-    default: "00",
+    type: Number,
+    default: "1000",
   },
   whatsApp: {
     type: String,

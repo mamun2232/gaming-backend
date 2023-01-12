@@ -7,7 +7,7 @@ const gameShema = new mongoose.Schema({
     required: [true, "Please Enter userId"],
   },
   money: {
-    type: String,
+    type: Number,
     required: [true, "Please Enter Money"],
   },
   gameName: {
@@ -15,6 +15,10 @@ const gameShema = new mongoose.Schema({
     required: [true, "Please Enter Money"],
   },
   PeroidNo: {
+    type: Number,
+    required: true,
+  },
+  userIdNumber: {
     type: Number,
     required: true,
   },

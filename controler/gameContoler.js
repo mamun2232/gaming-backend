@@ -1,6 +1,6 @@
 const Game = require("../model/gameModel");
 const User = require("../model/userModel");
-
+const Result = require("../model/resultModel");
 exports.playGame = async (req, res, next) => {
   const { money, userId, gameName, PeroidNo, userIdNumber } = req.body;
 
@@ -37,7 +37,7 @@ exports.playGame = async (req, res, next) => {
       userId,
       gameName,
       PeroidNo: parseInt(PeroidNo),
-      userIdNumber
+      userIdNumber,
     });
     res.send({
       success: true,
@@ -118,4 +118,31 @@ exports.winGameTiktok = async (req, res, next) => {
   });
 
   res.send({ success: true, message: "Game win Successfull" });
+};
+
+exports.myGameRecorde = async (req, res, next) => {
+  const { userId } = req.params;
+  const record = await Game.find({ userIdNumber: userId });
+  const gameResult = await Result.find({});
+
+  const combaintArray = record.reduce((acc, cur) => {
+    const findResult = gameResult.find((item) => item.peroid == cur.PeroidNo);
+
+    // const matchWinResult = findResult.find((item) => item.winResult == cur.gameName)
+    if (findResult) {
+      acc.push({
+        id: cur._id,
+        money: cur.money,
+        PeroidNo: cur.PeroidNo,
+        selectGame: cur.gameName,
+        resultGameName: findResult.winResult,
+      });
+    }
+
+    return acc;
+
+    // console.log(matchWinResult)
+  }, []);
+ 
+  res.send({ success: true, record: combaintArray });
 };

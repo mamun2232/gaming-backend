@@ -19,9 +19,11 @@ app.use(express.static("public"));
 const userRouter = require('./router/user')
 const gameRouter = require('./router/gameRouter')
 const resultRouter = require("./router/resultRouter")
+const withdrowRouter = require("./router/withdrowRouter")
 app.use("/api/v1/user" , userRouter)
 app.use("/api/v1/game" , gameRouter)
 app.use("/api/v1/result" , resultRouter)
+app.use("/api/v1/withdrow" , withdrowRouter)
 
 
 // test route

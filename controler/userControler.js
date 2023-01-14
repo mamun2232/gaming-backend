@@ -12,7 +12,7 @@ exports.registerUser = async (req, res, next) => {
         .send({ success: false, message: "User allready exsits" });
     }
 
-    console.log(req.body);
+  
     //     password hassing
     const salt = await bcrypt.genSalt(6);
     const hassPassword = await bcrypt.hash(password, salt);

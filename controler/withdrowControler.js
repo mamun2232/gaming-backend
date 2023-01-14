@@ -23,3 +23,20 @@ exports.withdrowRequest = async (req, res, next) => {
   });
   res.send({ success: true, message: "processing Successfull. Please wait" });
 };
+
+exports.allWithdrowRequstCallect = async (req, res, next) => {
+  const withdrow = await Withdrow.find();
+  res.send({ success: true, withdrow });
+};
+
+exports.withdrowPayHendler = async (req, res, next) => {
+  const withdrow = await Withdrow.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
+  res.send({
+    success: true,
+    message: "Status Paid Successfull",
+  });
+};

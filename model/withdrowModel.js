@@ -17,6 +17,10 @@ PayId: {
     type: String,
     required: true,
   },
+  status: {
+    type: String,
+    default: "Not Pay",
+  },
 });
 
 const withdrowModel = new mongoose.model("Withdrow", withdrowShema);

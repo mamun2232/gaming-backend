@@ -26,7 +26,11 @@ PayId: {
           type: String,
           required: true,
         },
-      }
+      },
+      status: {
+        type: String,
+        default: "Pending",
+      },
   
 });
 

@@ -20,10 +20,12 @@ const userRouter = require('./router/user')
 const gameRouter = require('./router/gameRouter')
 const resultRouter = require("./router/resultRouter")
 const withdrowRouter = require("./router/withdrowRouter")
+const reachrgeRouter = require("./router/reachrgeRouter")
 app.use("/api/v1/user" , userRouter)
 app.use("/api/v1/game" , gameRouter)
 app.use("/api/v1/result" , resultRouter)
 app.use("/api/v1/withdrow" , withdrowRouter)
+app.use("/api/v1/reachrge" , reachrgeRouter)
 
 
 // test route

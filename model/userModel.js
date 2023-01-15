@@ -48,7 +48,7 @@ const userShema = new mongoose.Schema({
 });
 
 userShema.methods.getJWTtoken = function () {
-  return jwt.sign({ email: this.email }, process.env.SCRECT_TOKEN, {
+  return jwt.sign({ email: this.email }, 'DPEEHEOEEPEERUR78USXPEPEEHC', {
     expiresIn: process.env.JWT_EXPIRE,
   });
 };

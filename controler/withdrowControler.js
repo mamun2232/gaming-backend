@@ -40,3 +40,23 @@ exports.withdrowPayHendler = async (req, res, next) => {
     message: "Status Paid Successfull",
   });
 };
+
+exports.deleteWithdrow = async (req, res, next) => {
+  try {
+    const user = await Withdrow.findById(req.params.id);
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: "User Withdrow Not Found",
+      });
+    } else {
+      user.remove();
+      res.status(200).json({
+        success: true,
+        message: "User Withdrow Delete Successfull",
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};

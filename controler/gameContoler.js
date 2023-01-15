@@ -146,3 +146,25 @@ exports.myGameRecorde = async (req, res, next) => {
  
   res.send({ success: true, record: combaintArray });
 };
+
+exports.deleteRecode = async (req, res, next) => {
+  try {
+   
+    const user = await Game.findById(req.params.id);
+    
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: "recode Not Found",
+      });
+    } else {
+      user.remove();
+      res.status(200).json({
+        success: true,
+        message: " Delete Successfull",
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};

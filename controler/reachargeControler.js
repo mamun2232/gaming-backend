@@ -58,3 +58,24 @@ exports.userReachrge = async (req, res, next) => {
 
   res.send({ success: true, message: "User Reachrge Successfull" });
 };
+
+
+exports.deleteRecharge = async (req, res, next) => {
+  try {
+    const user = await Reacharge.findById(req.params.id);
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: "User Reachrge Not Found",
+      });
+    } else {
+      user.remove();
+      res.status(200).json({
+        success: true,
+        message: "User Reachrge Delete Successfull",
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};

@@ -84,48 +84,49 @@ exports.deleteUser = async (req, res, next) => {
 exports.createAdmin = async (req, res, next) => {
   try {
     const email = req.params.email;
-    const adminRequester = req.decoded.email;
+    const adminRequester = req.query.admin;
     const requestAdmin = await User.findOne({ email: adminRequester });
-    if (requestAdmin.role == "owner") {
+    if (requestAdmin.role == "Admin") {
       const roleAction = req.query.roleAction;
 
-      if (roleAction == "controler") {
+
         const makeAdmin = await User.updateOne(
           { email },
           {
-            $set: { role: "controler" },
+            $set: { role: "Admin" },
           }
         );
         if (makeAdmin.modifiedCount > 0) {
           res.status(200).json({
             success: true,
-            message: "Advaiser Make Successfull",
+            message: "Admin Make Successfull",
           });
         } else {
           res.status(200).json({
-            success: true,
-            message: "Advaiser request fail",
+            success: false,
+            message: "Allready Admin",
           });
         }
-      } else if (roleAction === "owner") {
-        const makeUser = await User.updateOne(
-          { email },
-          {
-            $set: { role: "owner" },
-          }
-        );
-        if (makeUser.modifiedCount > 0) {
-          res.status(200).json({
-            success: true,
-            message: "Owner Make Succssfull",
-          });
-        } else {
-          res.status(200).json({
-            success: true,
-            message: "Owner request fail",
-          });
-        }
-      }
+      
+      //  if (roleAction === "owner") {
+      //   const makeUser = await User.updateOne(
+      //     { email },
+      //     {
+      //       $set: { role: "owner" },
+      //     }
+      //   );
+      //   if (makeUser.modifiedCount > 0) {
+      //     res.status(200).json({
+      //       success: true,
+      //       message: "Owner Make Succssfull",
+      //     });
+      //   } else {
+      //     res.status(200).json({
+      //       success: true,
+      //       message: "Owner request fail",
+      //     });
+      //   }
+      // }
     } else {
       res.status(403).send({ message: "forbiden Accescc" });
     }
@@ -173,12 +174,14 @@ exports.removeAdmin = async (req, res, next) => {
 exports.cheackAdmin = async (req, res, next) => {
   try {
     const email = req.params.email;
+    console.log(email)
     const user = await User.findOne({ email });
-    console.log(email);
+    console.log(user);
     if (!user) {
       res.status(404).json({ message: "User Not Found" });
     } else {
-      const isAdmin = user.role === "owner" || user.role === "controler";
+      const isAdmin = user.role === "Admin" 
+      console.log(isAdmin);
       res.status(200).json({
         success: true,
         admin: isAdmin,

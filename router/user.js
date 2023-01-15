@@ -1,5 +1,5 @@
 const express = require('express')
-const { registerUser, loginUser, getAllUser, singleUser, deleteUser, cheackAdmin } = require('../controler/userControler')
+const { registerUser, loginUser, getAllUser, singleUser, deleteUser, cheackAdmin, createAdmin,  } = require('../controler/userControler')
 const verifayToken = require('../utilitis/verifayToken')
 const router = express.Router()
 
@@ -9,7 +9,7 @@ router.post("/login" , loginUser)
 router.get("/user" , getAllUser)
 router.get("/user/:id" , singleUser)
 router.delete("/user/:id" , deleteUser)
-router.get("/chackAdmin/:email", verifayToken, cheackAdmin)
-
+router.get("/chackAdmin/:email" , verifayToken, cheackAdmin)
+router.put("/admin/:email" , createAdmin);
 
 module.exports = router

@@ -5,7 +5,9 @@ const verifayToken = (req, res, next) => {
     return res.status(401).send({ massage: "Unauthorization Access" });
   }
   const token = authHeader.split(" ")[1];
-  jwt.verify(token, process.env.SCRECT_TOKEN, function (err, decoded) {
+  console.log(token);
+  jwt.verify(token, 'DPEEHEOEEPEERUR78USXPEPEEHC', function (err, decoded) {
+    console.log(decoded);
     if (err) {
       return res.status(403).send({ massage: "Forbidden Access" });
     }

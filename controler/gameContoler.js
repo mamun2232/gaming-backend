@@ -91,67 +91,70 @@ exports.winGameFacebook = async (req, res, next) => {
   res.send({ success: true, message: "Game win Successfull" });
 };
 exports.winGameTiktok = async (req, res, next) => {
-  const result = req.body;
-  const users = await User.find({});
+  try {
+    const result = req.body;
+    const users = await User.find({});
 
-  // calculate user balance
-  const combinedArray = users.reduce((acc, cur) => {
-    const user = result.find((item) => item.id == cur._id);
-    console.log(user);
-    if (user) {
-      acc.push({
-        id: user.id,
-        name: cur.name,
-        balance: cur.balance + user.money,
-      });
-    }
-    return acc;
-  }, []);
+    // calculate user balance
+    const combinedArray = users.reduce((acc, cur) => {
+      const user = result.find((item) => item.id == cur._id);
+      console.log(user);
+      if (user) {
+        acc.push({
+          id: user.id,
+          name: cur.name,
+          balance: cur.balance + user.money,
+        });
+      }
+      return acc;
+    }, []);
 
-  // update user balance
-  combinedArray.forEach(async (item) => {
-    console.log(item);
-    const user = await User.findOne({ _id: item.id });
-    console.log(user);
-    user.balance = parseInt(item.balance);
-    await user.save();
-  });
+    // update user balance
+    combinedArray.forEach(async (item) => {
+      console.log(item);
+      const user = await User.findOne({ _id: item.id });
+      console.log(user);
+      user.balance = parseInt(item.balance);
+      await user.save();
+    });
 
-  res.send({ success: true, message: "Game win Successfull" });
+    res.send({ success: true, message: "Game win Successfull" });
+  } catch (e) {}
 };
 
 exports.myGameRecorde = async (req, res, next) => {
-  const { userId } = req.params;
-  const record = await Game.find({ userIdNumber: userId });
-  const gameResult = await Result.find({});
+  try {
+    const { userId } = req.params;
+    const record = await Game.find({ userIdNumber: userId });
+    const gameResult = await Result.find({});
 
-  const combaintArray = record.reduce((acc, cur) => {
-    const findResult = gameResult.find((item) => item.peroid == cur.PeroidNo);
+    const combaintArray = record.reduce((acc, cur) => {
+      const findResult = gameResult.find((item) => item.peroid == cur.PeroidNo);
 
-    // const matchWinResult = findResult.find((item) => item.winResult == cur.gameName)
-    if (findResult) {
-      acc.push({
-        id: cur._id,
-        money: cur.money,
-        PeroidNo: cur.PeroidNo,
-        selectGame: cur.gameName,
-        resultGameName: findResult.winResult,
-      });
-    }
+      // const matchWinResult = findResult.find((item) => item.winResult == cur.gameName)
+      if (findResult) {
+        acc.push({
+          id: cur._id,
+          money: cur.money,
+          PeroidNo: cur.PeroidNo,
+          selectGame: cur.gameName,
+          resultGameName: findResult.winResult,
+        });
+      }
 
-    return acc;
+      return acc;
 
-    // console.log(matchWinResult)
-  }, []);
- 
-  res.send({ success: true, record: combaintArray });
+      // console.log(matchWinResult)
+    }, []);
+
+    res.send({ success: true, record: combaintArray });
+  } catch (e) {}
 };
 
 exports.deleteRecode = async (req, res, next) => {
   try {
-   
     const user = await Game.findById(req.params.id);
-    
+
     if (!user) {
       res.status(404).json({
         success: false,

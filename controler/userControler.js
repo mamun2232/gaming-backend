@@ -12,7 +12,6 @@ exports.registerUser = async (req, res, next) => {
         .send({ success: false, message: "User allready exsits" });
     }
 
-  
     //     password hassing
     const salt = await bcrypt.genSalt(6);
     const hassPassword = await bcrypt.hash(password, salt);
@@ -33,19 +32,23 @@ exports.registerUser = async (req, res, next) => {
 };
 
 exports.loginUser = async (req, res, next) => {
-  const { email, password } = req.body;
-  const userExist = await User.findOne({ email });
-  if (!userExist)
-    return res.status(202).send({ success: false, message: "User Not Found!" });
+  try {
+    const { email, password } = req.body;
+    const userExist = await User.findOne({ email });
+    if (!userExist)
+      return res
+        .status(202)
+        .send({ success: false, message: "User Not Found!" });
 
-  // compare password
-  const matchPassword = await bcrypt.compare(password, userExist.password);
-  if (!matchPassword)
-    return res
-      .status(202)
-      .send({ success: false, message: "Please Valid Password" });
+    // compare password
+    const matchPassword = await bcrypt.compare(password, userExist.password);
+    if (!matchPassword)
+      return res
+        .status(202)
+        .send({ success: false, message: "Please Valid Password" });
 
-  sendToken(userExist, 200, res);
+    sendToken(userExist, 200, res);
+  } catch (e) {}
 };
 
 exports.getAllUser = async (req, res, next) => {
@@ -54,11 +57,13 @@ exports.getAllUser = async (req, res, next) => {
 };
 
 exports.singleUser = async (req, res, next) => {
-  const user = await User.findById(req.params.id);
-  if (!user)
-    return res.status(404).send({ success: false, message: "user not find" });
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user)
+      return res.status(404).send({ success: false, message: "user not find" });
 
-  res.send({ success: true, user });
+    res.send({ success: true, user });
+  } catch (e) {}
 };
 
 exports.deleteUser = async (req, res, next) => {
@@ -89,25 +94,24 @@ exports.createAdmin = async (req, res, next) => {
     if (requestAdmin.role == "Admin") {
       const roleAction = req.query.roleAction;
 
-
-        const makeAdmin = await User.updateOne(
-          { email },
-          {
-            $set: { role: "Admin" },
-          }
-        );
-        if (makeAdmin.modifiedCount > 0) {
-          res.status(200).json({
-            success: true,
-            message: "Admin Make Successfull",
-          });
-        } else {
-          res.status(200).json({
-            success: false,
-            message: "Allready Admin",
-          });
+      const makeAdmin = await User.updateOne(
+        { email },
+        {
+          $set: { role: "Admin" },
         }
-      
+      );
+      if (makeAdmin.modifiedCount > 0) {
+        res.status(200).json({
+          success: true,
+          message: "Admin Make Successfull",
+        });
+      } else {
+        res.status(200).json({
+          success: false,
+          message: "Allready Admin",
+        });
+      }
+
       //  if (roleAction === "owner") {
       //   const makeUser = await User.updateOne(
       //     { email },
@@ -174,13 +178,12 @@ exports.removeAdmin = async (req, res, next) => {
 exports.cheackAdmin = async (req, res, next) => {
   try {
     const email = req.params.email;
-    console.log(email)
     const user = await User.findOne({ email });
-    console.log(user);
+
     if (!user) {
       res.status(404).json({ message: "User Not Found" });
     } else {
-      const isAdmin = user.role === "Admin" 
+      const isAdmin = user.role === "Admin";
       console.log(isAdmin);
       res.status(200).json({
         success: true,
@@ -189,5 +192,21 @@ exports.cheackAdmin = async (req, res, next) => {
     }
   } catch (error) {
     console.log(error);
+  }
+};
+
+exports.updateUser = async (req, res, next) => {
+  try {
+    const withdrow = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    });
+    res.send({
+      success: true,
+      message: "Update Successfull",
+    });
+  } catch (e) {
+    console.log(e);
   }
 };

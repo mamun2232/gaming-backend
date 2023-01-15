@@ -22,6 +22,7 @@ const resultRouter = require("./router/resultRouter");
 const withdrowRouter = require("./router/withdrowRouter");
 const reachrgeRouter = require("./router/reachrgeRouter");
 const contectRouter = require("./router/contectRouter");
+const errorHandeler = require("./utilitis/errorHandeler");
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/game", gameRouter);
 app.use("/api/v1/result", resultRouter);
@@ -34,6 +35,6 @@ app.use("/", (req, res) => {
   res.send("hellw world");
 });
 
-// app.use(errorHandeler);
+app.use(errorHandeler);
 
 module.exports = app;

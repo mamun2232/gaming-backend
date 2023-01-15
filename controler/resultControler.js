@@ -1,22 +1,34 @@
 const Result = require("../model/resultModel");
 
 exports.createResult = async (req, res, next) => {
-  await Result.create(req.body);
-  res.send({
-    success: true,
-    message: "Game win Or result published succesfull",
-  });
+  try {
+    await Result.create(req.body);
+    res.send({
+      success: true,
+      message: "Game win Or result published succesfull",
+    });
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 exports.getPeroid = async (req, res, next) => {
-  const peroid = await Result.find();
-  const lastPeroid = peroid[peroid.length - 1];
-  res.send({ success: true, peroid: lastPeroid.peroid + 1 });
+  try {
+    const peroid = await Result.find();
+    const lastPeroid = peroid[peroid.length - 1];
+    res.send({ success: true, peroid: lastPeroid.peroid + 1 });
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 exports.getAllResult = async (req, res, next) => {
-  const result = await Result.find();
-  res.send({ success: true, result });
+  try {
+    const result = await Result.find();
+    res.send({ success: true, result });
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 exports.deleteResult = async (req, res, next) => {

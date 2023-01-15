@@ -7,6 +7,7 @@ const {
   deleteUser,
   cheackAdmin,
   createAdmin,
+  updateUser,
 } = require("../controler/userControler");
 const verifayToken = require("../utilitis/verifayToken");
 const router = express.Router();
@@ -19,5 +20,5 @@ router.get("/user/:id", singleUser);
 router.delete("/user/:id", deleteUser);
 router.get("/chackAdmin/:email", cheackAdmin);
 router.put("/admin/:email", createAdmin);
-
+router.put("/update/:id", updateUser);
 module.exports = router;

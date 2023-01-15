@@ -3,42 +3,56 @@ const User = require("../model/userModel");
 const bcrypt = require("bcrypt");
 
 exports.withdrowRequest = async (req, res, next) => {
-  const { password, PayId, email, withdrowAmoun } = req.body;
-  const userExist = await User.findOne({ email });
-  if (!userExist)
-    return res.status(202).send({ success: false, message: "User Not Found!" });
+  try {
+    const { password, PayId, email, withdrowAmoun } = req.body;
+    const userExist = await User.findOne({ email });
+    if (!userExist)
+      return res
+        .status(202)
+        .send({ success: false, message: "User Not Found!" });
 
-  // compare password
-  const matchPassword = await bcrypt.compare(password, userExist.password);
-  if (!matchPassword)
-    return res
-      .status(202)
-      .send({ success: false, message: "Please Valid Password" });
-  userExist.balance = parseInt(userExist.balance) - parseInt(withdrowAmoun);
-  userExist.save();
-  await Withdrow.create({
-    PayId,
-    email,
-    withdrowAmoun: parseInt(withdrowAmoun),
-  });
-  res.send({ success: true, message: "processing Successfull. Please wait" });
+    // compare password
+    const matchPassword = await bcrypt.compare(password, userExist.password);
+    if (!matchPassword)
+      return res
+        .status(202)
+        .send({ success: false, message: "Please Valid Password" });
+    userExist.balance = parseInt(userExist.balance) - parseInt(withdrowAmoun);
+    userExist.save();
+    await Withdrow.create({
+      PayId,
+      email,
+      withdrowAmoun: parseInt(withdrowAmoun),
+    });
+    res.send({ success: true, message: "processing Successfull. Please wait" });
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 exports.allWithdrowRequstCallect = async (req, res, next) => {
-  const withdrow = await Withdrow.find();
-  res.send({ success: true, withdrow });
+  try {
+    const withdrow = await Withdrow.find();
+    res.send({ success: true, withdrow });
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 exports.withdrowPayHendler = async (req, res, next) => {
-  const withdrow = await Withdrow.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-    useFindAndModify: false,
-  });
-  res.send({
-    success: true,
-    message: "Status Paid Successfull",
-  });
+  try {
+    const withdrow = await Withdrow.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    });
+    res.send({
+      success: true,
+      message: "Status Paid Successfull",
+    });
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 exports.deleteWithdrow = async (req, res, next) => {

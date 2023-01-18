@@ -51,6 +51,28 @@ exports.loginUser = async (req, res, next) => {
   } catch (e) {}
 };
 
+exports.forgatePassword = async(req , res , next) =>{
+  try{
+    const {email , password} = req.body
+    const user = await User.findOne({email})
+    if(!user){
+      req.status(202).send({ success: false, message: "User Not Found!" });
+  
+    }
+     //     password hassing
+     const salt = await bcrypt.genSalt(6);
+     const hassPassword = await bcrypt.hash(password, salt);
+     user.password = hassPassword
+     user.save()
+     res.send({success: true, message: "Password Change Successfull"})
+  }
+  catch(e){
+    console.log(e)
+  }
+ 
+
+}
+
 exports.getAllUser = async (req, res, next) => {
   const user = await User.find({});
   res.send({ success: true, user });

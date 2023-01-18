@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 const withdrowShema = new mongoose.Schema({
-//   userId: {
-//     type: Schema.Types.ObjectId,
-//     ref: 'User' ,
-//     required: [true, "Please Enter userId"],
-//   },
-PayId: {
+  //   userId: {
+  //     type: Schema.Types.ObjectId,
+  //     ref: 'User' ,
+  //     required: [true, "Please Enter userId"],
+  //   },
+  PayId: {
     type: Number,
     required: [true, "Please Enter Number"],
   },
@@ -15,7 +15,6 @@ PayId: {
   },
   email: {
     type: String,
-    required: true,
   },
   status: {
     type: String,

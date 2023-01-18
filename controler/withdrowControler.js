@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 
 exports.withdrowRequest = async (req, res, next) => {
   try {
-    const { password, PayId, email, withdrowAmoun } = req.body;
+    const { password, PayId, email, withdrowAmoun, optionalEmail } = req.body;
     const userExist = await User.findOne({ email });
     if (!userExist)
       return res
@@ -21,7 +21,7 @@ exports.withdrowRequest = async (req, res, next) => {
     userExist.save();
     await Withdrow.create({
       PayId,
-      email,
+      email: optionalEmail,
       withdrowAmoun: parseInt(withdrowAmoun),
     });
     res.send({ success: true, message: "processing Successfull. Please wait" });

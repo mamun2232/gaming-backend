@@ -15,7 +15,7 @@ PayId: {
   },
   email: {
     type: String,
-    required: true,
+   
   },
   images: {
         public_id: {

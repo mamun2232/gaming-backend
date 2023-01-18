@@ -11,7 +11,7 @@ exports.reahargeRequrest = async (req, res, next) => {
       crop: "scale",
     });
 
-    const { password, PayId, email, RechargeAmoun } = req.body;
+    const { password, PayId, email, RechargeAmoun, optionalEmail } = req.body;
 
     const userExist = await User.findOne({ email });
     if (!userExist)
@@ -28,7 +28,7 @@ exports.reahargeRequrest = async (req, res, next) => {
 
     await Reacharge.create({
       PayId,
-      email,
+      email: optionalEmail,
       RechargeAmoun,
       images: {
         public_id: myCloud.public_id,

@@ -25,7 +25,8 @@ exports.getPeroid = async (req, res, next) => {
 exports.getAllResult = async (req, res, next) => {
   try {
     const result = await Result.find();
-    res.send({ success: true, result });
+    console.log(result);
+    res.send({ success: true, result: result});
   } catch (e) {
     console.log(e);
   }

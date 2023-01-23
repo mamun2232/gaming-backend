@@ -12,14 +12,17 @@ exports.registerUser = async (req, res, next) => {
         .status(202)
         .send({ success: false, message: "User allready exsits" });
     }
+
     if (referId) {
-      const referUser = await User.findOne({ userId: referId });
-      if (!referUser) {
+      let refersUser = await User.findOne({ userId: parseInt(referId) });
+      console.log(refersUser);
+      if (!refersUser) {
         res.status(202).send({ success: false, message: "ReferId Not Valid" });
       }
-      referUser = parseInt(referUser.balance) + 30;
-      referUser = referUser.shared + 1;
-      referUser.save();
+      console.log(refersUser);
+      refersUser.balance = refersUser.balance + 30;
+      refersUser.shared = refersUser.shared + 1;
+      await refersUser.save();
     }
 
     //     password hassing

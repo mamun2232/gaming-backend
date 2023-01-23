@@ -45,6 +45,11 @@ const userShema = new mongoose.Schema({
     type: String,
     default: "user",
   },
+  shared: {
+    type: Number,
+    default: 0,
+  },
+
 });
 
 userShema.methods.getJWTtoken = function () {

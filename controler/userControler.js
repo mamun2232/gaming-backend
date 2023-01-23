@@ -4,12 +4,22 @@ const sendToken = require("../utilitis/sendToken");
 
 exports.registerUser = async (req, res, next) => {
   try {
-    const { name, email, password, userId, whatsApp, invitedCode } = req.body;
+    const { name, email, password, userId, whatsApp, invitedCode, referId } =
+      req.body;
     const user = await User.findOne({ email });
     if (user) {
       return res
         .status(202)
         .send({ success: false, message: "User allready exsits" });
+    }
+    if (referId) {
+      const referUser = await User.findOne({ userId: referId });
+      if (!referUser) {
+        res.status(202).send({ success: false, message: "ReferId Not Valid" });
+      }
+      referUser = parseInt(referUser.balance) + 30;
+      referUser = referUser.shared + 1;
+      referUser.save();
     }
 
     //     password hassing
@@ -31,6 +41,34 @@ exports.registerUser = async (req, res, next) => {
   }
 };
 
+// exports.referingRegisterUser = async (req, res, next) => {
+//   try {
+//     const { name, email, password, userId, whatsApp, invitedCode , referId } = req.body;
+//     const user = await User.findOne({ email });
+//     if (user) {
+//       return res
+//         .status(202)
+//         .send({ success: false, message: "User allready exsits" });
+//     }
+
+//     //     password hassing
+//     const salt = await bcrypt.genSalt(6);
+//     const hassPassword = await bcrypt.hash(password, salt);
+
+//     const addedUser = await User.create({
+//       name,
+//       email,
+//       password: hassPassword,
+//       userId,
+//       whatsApp,
+//       invitedCode,
+//     });
+
+//     sendToken(addedUser, 200, res);
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };
 exports.loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -51,27 +89,23 @@ exports.loginUser = async (req, res, next) => {
   } catch (e) {}
 };
 
-exports.forgatePassword = async(req , res , next) =>{
-  try{
-    const {email , password} = req.body
-    const user = await User.findOne({email})
-    if(!user){
+exports.forgatePassword = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
       req.status(202).send({ success: false, message: "User Not Found!" });
-  
     }
-     //     password hassing
-     const salt = await bcrypt.genSalt(6);
-     const hassPassword = await bcrypt.hash(password, salt);
-     user.password = hassPassword
-     user.save()
-     res.send({success: true, message: "Password Change Successfull"})
+    //     password hassing
+    const salt = await bcrypt.genSalt(6);
+    const hassPassword = await bcrypt.hash(password, salt);
+    user.password = hassPassword;
+    user.save();
+    res.send({ success: true, message: "Password Change Successfull" });
+  } catch (e) {
+    console.log(e);
   }
-  catch(e){
-    console.log(e)
-  }
- 
-
-}
+};
 
 exports.getAllUser = async (req, res, next) => {
   const user = await User.find({});
